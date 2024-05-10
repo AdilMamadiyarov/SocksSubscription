@@ -1,0 +1,10 @@
+.MyHeader {
+  background-color: #ffffff;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid black; 
+  font-size: 25px;
+}
