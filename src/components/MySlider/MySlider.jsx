@@ -7,14 +7,36 @@ import image1 from '../../images/image1.jpg';
 import image2 from '../../images/image2.jpg';
 import image3 from '../../images/image3.jpg';
 
-
 const MySlider = () => {
   const data = [
-    { text: "Получайте стильные носки ежемесячно без лишних забот. Подписка с бесплатной доставкой - ваш путь к комфорту и моде!", img: image1 },
-    { text: "Новая коллекция носков уже здесь! Специальные предложения для наших подписчиков.", img: image2 },
-    { text: "Сделайте свой выбор! Лучшие носки по лучшим ценам.", img: image3 },
+    { 
+      text: "Получайте стильные носки ежемесячно без лишних забот. Подписка с бесплатной доставкой - ваш путь к комфорту и моде!", 
+      img: image1,
+      buttons: [{ text: "Подписаться", onClick: () => console.log("Подписаться") }]
+    },
+    { 
+      text: "Новая коллекция носков уже здесь! Специальные предложения для наших подписчиков.", 
+      img: image2,
+      buttons: [{ text: "Посмотреть", onClick: () => console.log("Купить") }]
+    },
+    { 
+      text: "Ощутите свежесть и надежность с нашими носками. Позвольте себе насладиться каждым шагом в удобстве и элегантности с носками от нашей компании.", 
+      img: image3,
+      buttons: [{ text: "Подробнее", onClick: () => console.log("Подробнее") }]
+    },
   ];
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />
+  };
 
   function SampleNextArrow(props) {
     const { className, onClick } = props;
@@ -34,29 +56,22 @@ const MySlider = () => {
       />
     );
   }
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplaySpeed: 1000,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
-  };
   
   return (
-    <div>
-        <Slider {...settings}>
-        {data.map((item, index) => (
-            <div key={index}>
-            <div className={classes.slide} style={{ backgroundImage: `url(${item.img})` }}>
-                <h1 className={classes.slidetext}>{item.text}</h1>
+    <Slider {...settings}>
+      {data.map((item, index) => (
+        <div key={index}>
+          <div className={classes.slide} style={{ backgroundImage: `url(${item.img})` }}>
+            <h1 className={classes.slidetext}>{item.text}</h1>
+            <div className={classes.buttons}>
+            {item.buttons.map((button, buttonIndex) => (
+              <button key={buttonIndex} className={classes.button} onClick={button.onClick}>{button.text}</button>
+              ))}
             </div>
-            </div>
-        ))}
-        </Slider>
-    </div>
+          </div>
+        </div>
+      ))}
+    </Slider>
   );
 };
 

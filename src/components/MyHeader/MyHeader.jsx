@@ -13,6 +13,7 @@ const MyHeader = ({ ...props }) => {
             <div className={classes.navlinks}>
                 <CustomLink to="/MainPage" className={classes.navtext}>О нас</CustomLink>
                 <CustomLink to="/CollectionPage" className={classes.navtext}>Коллекция</CustomLink>
+                <CustomLink to="/CollectionPage" className={classes.navtext}>Доставка</CustomLink>
                 <CustomLink to="/ProfilePage" className={classes.navtext}>Профиль</CustomLink>
             </div>
         </header>

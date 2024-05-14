@@ -12,7 +12,7 @@
 
 .image-wrapper img {
   width: 280px; 
-  height: 400px; 
+  height: 350px; 
   border-radius: 10px;
   transition: transform 0.3s ease;
 }

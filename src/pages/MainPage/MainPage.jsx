@@ -6,6 +6,7 @@ import image6 from '../../images/image6.jpg';
 import image7 from '../../images/image7.jpg';
 import image8 from '../../images/image8.jpg';
 import MySlider from "../../components/MySlider/MySlider";
+import Footer from "../../components/Footer/Footer";
 
 function MainPage() {
   const data = [
@@ -22,12 +23,13 @@ function MainPage() {
       <h1 className="socks-title">Виды носков</h1>
       <div className={classes.gallery}>
         {data.map((item, index) => (
-          <div key={index} className={classes["image-wrapper"]}> {/* Fix class name */}
+          <div key={index} className={classes["image-wrapper"]}> 
             <img src={item.img} alt={`Изображение ${index + 1}`} />
-            <div className={classes["image-text"]}>{item.text}</div> {/* Fix class name */}
+            <div className={classes["image-text"]}>{item.text}</div> 
           </div>
         ))}
       </div>
+      <Footer/>
     </div>
   );
 }
