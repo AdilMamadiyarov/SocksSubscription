@@ -1,44 +1,41 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import MyButton from "../../components/MyButton/MyButton";
 import MyHeader from "../../components/MyHeader/MyHeader";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { AuthContext } from "../../components/context";
+import { useNavigate } from "react-router-dom";
+
+
 function ProfilePage() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1
+  const {setIsAuth} = useContext(AuthContext);
+  const {email, setEmail} = useContext(AuthContext);
+  const {name, setName} = useContext(AuthContext);
+  const {password, setPassword} = useContext(AuthContext);
+
+  const navigate = useNavigate()
+
+  const LogoutUser = () => {
+    setIsAuth(false);
+    localStorage.removeItem('auth')
+    navigate('/MainPage')
+    window.location.reload();
   };
-  return (
+
+  const Data = useCallback(() => {
+    setName(localStorage.getItem('name'));
+    setEmail(localStorage.getItem('email'));
+    setPassword(localStorage.getItem('password'));
+  }, [setEmail, setName, setPassword]);
+
+  useEffect(() => {
+      Data();
+  }, [Data]);
+
+    return (
     <div>
         <MyHeader/>
         <h1>Профиль</h1>
-        <MyButton>Кнопка</MyButton>
-        <div className="slider-container">
-      <Slider {...settings}>
-        <div>
-          <h3>1</h3>
-        </div>
-        <div>
-          <h3>2</h3>
-        </div>
-        <div>
-          <h3>3</h3>
-        </div>
-        <div>
-          <h3>4</h3>
-        </div>
-        <div>
-          <h3>5</h3>
-        </div>
-        <div>
-          <h3>6</h3>
-        </div>
-      </Slider>
-    </div>
+        <p>{name}, {password}, {email}</p>
+        <MyButton onClick={LogoutUser}>Кнопка</MyButton>
     </div>
   );
 }

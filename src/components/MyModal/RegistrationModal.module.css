@@ -1,0 +1,42 @@
+.myModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    background: rgba(0,0,0, 0.5);
+    z-index: 10;
+    color: black;
+}
+.myModal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myModalContent {
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    min-width: 250px;
+    width: 400px;
+    height: 500px;
+}
+
+.myModalContent form {
+    display: flex;
+    flex-direction: column;
+}
+
+.myModalContent input[type="email"],
+.myModalContent input[type="text"],
+.myModalContent input[type="password"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+

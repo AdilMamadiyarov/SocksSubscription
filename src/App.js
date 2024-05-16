@@ -1,18 +1,35 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import { useState } from "react";
+import { AuthContext } from "./components/context";
 
 function App() {
+  const [IsAuth, setIsAuth] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
+    <AuthContext.Provider value={{ 
+      IsAuth, setIsAuth,
+      name, setName,
+      email, setEmail,
+      password, setPassword
+    }}>
       <BrowserRouter>
-        <Routes>
-            <Route path="/MainPage" element={<MainPage />} />
+      <Routes>
+          <Route path="/MainPage" element={<MainPage />} />
+          {IsAuth ? (
             <Route path="/ProfilePage" element={<ProfilePage />} />
-            <Route path="*" element={<Navigate to="/error" />} />
-            <Route path="/error" element={<ErrorPage />} />
+          ) : (
+            <Route path="/ProfilePage" element={<ErrorPage />} />
+          )}
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
+    </AuthContext.Provider>
   );
 }
 

@@ -1,12 +1,15 @@
 import React from "react";
 import MyHeader from "../../components/MyHeader/MyHeader";
+import classes from "./ErrorPage.module.css"
 
 function ErrorPage() {
   return (
     <div>
         <MyHeader/>
-        <h1>Ошибка</h1>
-        <h3>Похоже этой страницы не существует</h3>
+        <div className={classes.error}>
+          <h1>К сожалению, эта страница недоступна.</h1>
+          <h3>Возможно, вы воспользовались недействительной ссылкой или страница была удалена.</h3>
+        </div>
     </div>
   );
 }

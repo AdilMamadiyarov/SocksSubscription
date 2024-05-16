@@ -1,0 +1,16 @@
+.createcontainer{
+    align-items: center;
+    text-align: center;
+}
+.backdiv {
+    text-align: left;
+}
+.backdiv button {
+    font-size: 35px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.createbutton{
+    margin-top: 30px;
+}

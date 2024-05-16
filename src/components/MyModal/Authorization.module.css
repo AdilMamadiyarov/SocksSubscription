@@ -1,0 +1,50 @@
+.regcontainer{
+    align-items: center;
+    text-align: center;
+}
+.regdiv{
+    border: 1px solid black;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.registrationform input{
+    max-width: 350px;
+    font-size: 20px;
+    height: 20px;
+}
+.registrationform button {
+    width: 350px;
+    background-color: #333;
+    border-radius: 5px;
+    height: 40px;
+    margin: auto; 
+    display: block; 
+    font-size: 20px;
+    color: White;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.forgotcontainer{
+    margin-top: 30px;
+}
+.forgotcontainer button{
+    border: none;
+    background-color: transparent;
+    color: blue;
+    cursor: pointer;
+}
+
+.forgetpassword{
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.myModalContent input[type="email"],
+.myModalContent input[type="password"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
