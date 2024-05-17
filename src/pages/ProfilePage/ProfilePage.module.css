@@ -1,0 +1,150 @@
+.container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    width: 270px;
+    height: 600px;
+
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    cursor: pointer;
+    position: relative;
+    padding: 10px 20px;
+    font-size: 18px; 
+    width: 177px;
+    margin-top: 30px;/* Добавляем отступы сверху и снизу, а также слева и справа */
+  }
+  
+  .sidebar li span {
+    position: relative; /* Переводим текст в относительное позиционирование */
+    z-index: 2; /* Поднимаем текст над линией */
+  }
+  
+  /* Добавляем разделяющие линии между пунктами навигации */
+  .sidebar li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: -40%; /* Позиционируем линию по середине относительно текста */
+    left: 50%; /* Позиционируем линию по середине относительно текста */
+    transform: translate(-50%, 50%); /* Корректируем положение линии */
+    width: calc(100% - 40px); /* Устанавливаем ширину линии с учетом отступов */
+    border-bottom: 1px solid #ccc; /* Устанавливаем стиль линии */
+    z-index: 1; /* Опускаем линию ниже текста */
+  }
+  
+  
+  .profile {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .profile h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color:rgba(0, 0, 0, 0.738);
+  }
+  
+  .profile div {
+    margin-bottom: 10px;
+  }
+  
+  .profile strong {
+    font-weight: bold;
+  }
+  .welcome {
+    font-size: 20px;
+    font-weight: 550;
+    margin-bottom: 60px;
+    text-align: left;
+    margin-top: -15px;
+    margin-left: 20px;
+  }
+  .userData {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .userData > div {
+    margin-bottom: 10px;
+  }
+  .input {
+    border: none;
+    outline: none;
+    /* Другие стили, если необходимо */
+  }
+/* Пример стилей для кнопок */
+.button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #3e3e3e;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  
+  .button:hover {
+    background-color: #000000;
+  }
+  
+  .button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }  
+
+
+  .profileContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensure content is spaced between */
+    gap: 16px; /* Space between the profile picture and text/button */
+  }
+  
+  .profilePicture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .editProfileContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between text and button */
+    flex-grow: 1; /* Allow the container to take up available space */
+  }
+  
+  .section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+ 
+  
+  
