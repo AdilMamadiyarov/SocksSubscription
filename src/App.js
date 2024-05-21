@@ -4,6 +4,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { useState } from "react";
 import { AuthContext } from "./components/context";
+import SubscriptionInfo from "./pages/SubscriptionPage/SubscriptionInfo";
 
 function App() {
   const [IsAuth, setIsAuth] = useState(false);
@@ -21,6 +22,7 @@ function App() {
       <BrowserRouter>
       <Routes>
           <Route path="/MainPage" element={<MainPage />} />
+          <Route path="/SubscriptionInfo" element={<SubscriptionInfo />} />
           {IsAuth ? (
             <Route path="/ProfilePage" element={<ProfilePage />} />
           ) : (

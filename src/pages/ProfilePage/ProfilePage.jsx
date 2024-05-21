@@ -16,10 +16,8 @@ function validatePhoneNumber(phoneNumber) {
 }
 
 function ProfilePage() {
-  const {setIsAuth} = useContext(AuthContext);
-  const {setEmail} = useContext(AuthContext);
-  const {setName} = useContext(AuthContext);
-  const {setPassword} = useContext(AuthContext);
+  const { setIsAuth, email, setEmail, name, setName, password, setPassword } = useContext(AuthContext);
+
 
   const navigate = useNavigate()
 
@@ -34,17 +32,25 @@ function ProfilePage() {
     setName(localStorage.getItem('name'));
     setEmail(localStorage.getItem('email'));
     setPassword(localStorage.getItem('password'));
+  
+    setUser((prevUser) => ({
+      ...prevUser,
+      firstName: localStorage.getItem('name') || prevUser.firstName,
+      email: localStorage.getItem('email') || prevUser.email
+    }));
   }, [setEmail, setName, setPassword]);
-
+  
   useEffect(() => {
-      Data();
-  }, [Data]);
+    Data();
+    console.log(email, name, password);
+  }, [Data, email, name, password]);
+  
 
 
 
   const [user, setUser] = useState({
-    email: "example@example.com",
-    firstName: "Иван",
+    email: email,
+    firstName: name,
     lastName: "Иванов",
     birthDate: "",
     gender: "",
@@ -82,7 +88,7 @@ function ProfilePage() {
             <li onClick={() => handleMenuItemClick("Способ оплаты")}>Способ оплаты</li>
             <li onClick={() => handleMenuItemClick("Коллекция")}>Коллекция</li>
             <li onClick={() => handleMenuItemClick("Подписка")}>Подписка</li>
-            <li onClick={() => handleMenuItemClick("Выход из аккаунта")}>Выход из аккаунта</li>
+            <li onClick={LogoutUser}>Выход из аккаунта</li>
             
           </ul>
         </div>
