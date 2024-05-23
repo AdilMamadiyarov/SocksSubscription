@@ -57,7 +57,7 @@ function ProfilePage() {
     setEmail(localStorage.getItem('email') || '');
     setPassword(localStorage.getItem('password') || '');
   }, [setEmail, setName, setPassword]);
-
+  
   useEffect(() => {
     Data();
   }, [Data]);
