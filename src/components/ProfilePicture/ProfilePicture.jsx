@@ -3,12 +3,17 @@ import styles from '../../pages/ProfilePage/ProfilePage.module.css';
 
 function ProfilePicture({ user }) {
   const generateRandomColor = (str) => {
-    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
+    const colors = [
+      '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', 
+      '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', 
+      '#795548', '#9e9e9e', '#607d8b'
+    ];
     const index = str.charCodeAt(0) % colors.length;
     return colors[index];
   };
 
-  const renderInitials = (name) => {
+  const renderInitials = (name = '') => {
+    if (!name) return ''; // Если имя пустое или неопределено, вернуть пустую строку
     const initials = name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
     return initials;
   };
@@ -41,7 +46,7 @@ function ProfilePicture({ user }) {
             }}
           />
         ) : (
-          renderInitials(user.firstName)
+          renderInitials(user.name) // Используйте user.name вместо user.firstName
         )}
       </div>
     </div>
