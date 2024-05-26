@@ -33,15 +33,15 @@ const MyHeader = ({...props }) => {
         </div>
         <div className={classes.navlinks}>
             <CustomLink to="/MainPage" className={classes.navtext}>О нас</CustomLink>
-            <CustomLink to="/CollectionPage" className={classes.navtext}>Коллекция</CustomLink>
-            <CustomLink to="/SubscriptionInfo" className={classes.navtext}>Доставка</CustomLink>
+            <CustomLink to="/Collection" className={classes.navtext}>Коллекция</CustomLink>
+            <CustomLink to="/SubscriptionInfo" className={classes.navtext}>Подписка</CustomLink>
             {IsAuth ? (
                 <CustomLink to="/ProfilePage" className={classes.navtext}>Профиль</CustomLink>
             ) : (
                 <CustomLink to="" onClick={ModalRegistration} className={classes.navtext}>Регистрация</CustomLink>
             )}
         </div>
-        <MyModal visible={modalVisible} setVisible={setModalVisible} />
+        <MyModal visible={modalVisible} setVisible={setModalVisible} registration={true}/>
     </header>
     );
 };

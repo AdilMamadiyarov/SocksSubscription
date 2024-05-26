@@ -13,7 +13,7 @@ function ProfilePicture({ user }) {
   };
 
   const renderInitials = (name = '') => {
-    if (!name) return ''; // Если имя пустое или неопределено, вернуть пустую строку
+    if (!name) return ''; 
     const initials = name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
     return initials;
   };
@@ -42,11 +42,11 @@ function ProfilePicture({ user }) {
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover' // Заполнять круг без искажений
+              objectFit: 'cover' 
             }}
           />
         ) : (
-          renderInitials(user.name) // Используйте user.name вместо user.firstName
+          renderInitials(user.name) 
         )}
       </div>
     </div>
