@@ -6,11 +6,9 @@ import Footer from "../../components/Footer/Footer";
 import ProfilePicture from '../../components/ProfilePicture/ProfilePicture';
 import Address from "../../pages/ProfilePage/Address/address";
 import Payment from "../../pages/ProfilePage/Payment/Payment";
-import MyButton from "./MyButton/MyButton";
+import SideBar from "./SideBar/SideBar";
 import MyModal from "../../components/MyModal/RegistrationModal";
 import modalstyle from "./Logout/Logout.module.css";
-import SideBar from "./SideBar/SideBar";
-
 
 function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,7 +21,7 @@ function validatePhoneNumber(phoneNumber) {
 }
 
 function ProfilePage() {
-  const {setEmail, setName, setPassword, email: authEmail, name: authName } = useContext(AuthContext);
+  const { setEmail, setName, setPassword, email: authEmail, name: authName } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState("Информация аккаунта");
 
@@ -104,54 +102,60 @@ function ProfilePage() {
 
   return (
     <div>
+      <MyModal visible={modalVisible} setVisible={setModalVisible} registration={false} style={modalstyle}/>
       <MyHeader />
       <div className={styles.container}>
       <SideBar selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
-
-<div className={styles.profile}>
-  <h1>{selectedMenuItem}</h1>
-  {selectedMenuItem === "Информация аккаунта" && (
-    <div className={styles.userData}>
-      <div className={styles.section}>
-        <div>
-          <strong>Фотография профиля:</strong>
-          <div className={styles.profileContainer}>
-            
-            <ProfilePicture user={user} />
-            {user.editingProfilePicture ? (
-              
-              <>
-                <input
-                  type="file"
-                  onChange={(e) => setUser({ ...user, profilePicture: URL.createObjectURL(e.target.files[0]) })}
-                  className={styles.input}
-                />
-                  <MyButton
-                    onClick={() => setUser((prevUser) => {
-                      const updatedUser = { ...prevUser, editingProfilePicture: false };
-                      saveUserToLocalStorage(updatedUser);
-                      return updatedUser;
-                    })}>
-                    Сохранить
-                  </MyButton>
-                
-              </>
-            ) : (
-              <div className={styles.editProfileContainer}>
-                <span>Изменить профиль</span>
-                  <MyButton onClick={() => setUser({ ...user, editingProfilePicture: true })}>
-                    Изменить
-                  </MyButton>
+        <div className={styles.profile}>
+          <h1>{selectedMenuItem}</h1>
+          {selectedMenuItem === "Информация аккаунта" && (
+            <div className={styles.userData}>
+              <div className={styles.section}>
+                <div>
+                  <div className={styles.profileContainer}>
+                    <ProfilePicture user={user} />
+                    {user.editingProfilePicture ? (
+                      <>
+                        <input
+                          type="file"
+                          onChange={(e) => setUser({ ...user, profilePicture: URL.createObjectURL(e.target.files[0]) })}
+                          className={styles.inputProfile}
+                        />
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.buttonProfile}
+                            onClick={() => setUser((prevUser) => {
+                              const updatedUser = { ...prevUser, editingProfilePicture: false };
+                              saveUserToLocalStorage(updatedUser);
+                              return updatedUser;
+                            })}
+                          >
+                            Сохранить
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className={styles.editProfileContainer}>
+                        <span>Фотография профиля</span>
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.buttonProfile}
+                            onClick={() => setUser({ ...user, editingProfilePicture: true })}
+                          >
+                            Изменить
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
               
 
+            
 <div className={styles.section}>
   <div>
-    <strong>Имя:</strong>
+    <p>Имя</p>
     <div className={styles.inputContainer}>
       {user.editingName ? (
         <>
@@ -161,159 +165,218 @@ function ProfilePage() {
             onChange={(e) => handleNameChange(e.target.value)}
             className={styles.input}
           />
-            <MyButton onClick={handleNameSave}>
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.button}
+              onClick={handleNameSave}
+            >
               Сохранить
-            </MyButton>
-        </>
-      ) : (
-        <>
-          <span>{user.name}</span>
-            <MyButton onClick={() => setUser({ ...user, editingName: true })}>
-              Изменить
-            </MyButton>
-        </>
-      )}
-    </div>
-  </div>
-</div>
-
-
-<div className={styles.section}>
-  <div>
-    <strong>Дата рождения:</strong>
-    <div className={styles.inputContainer}>
-      {user.editingBirthDate ? (
-        <>
-          <input
-            type="date"
-            value={user.birthDate}
-            onChange={(e) => handleBirthDateChange(e.target.value)}
-            className={styles.input}
-          />
-            <MyButton onClick={handleBirthDateSave}>
-              Сохранить
-            </MyButton>
-        </>
-      ) : (
-        <>
-          <span>{user.birthDate}</span>
-            <MyButton onClick={() => setUser({ ...user, editingBirthDate: true })}>
-              Изменить
-            </MyButton>
-        </>
-      )}
-    </div>
-  </div>
-</div>
-
-<div className={styles.section}>
-  <div>
-    <strong>Email:</strong>
-    <div className={styles.inputContainer}>
-      {user.editingEmail ? (
-        <>
-          <input
-            type="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
-            className={styles.input}
-            style={{ borderColor: user.email && !validateEmail(user.email) ? "red" : "" }}
-          />
-            <MyButton
-              onClick={() => {
-                if (validateEmail(user.email)) {
-                  setUser((prevUser) => {
-                    const updatedUser = { ...prevUser, editingEmail: false };
-                    saveUserToLocalStorage(updatedUser);
-                    return updatedUser;
-                  });
-                }
-              }}>
-              Сохранить
-            </MyButton>
-        </>
-      ) : (
-        <>
-          <span>{user.email}</span>
-          <MyButton onClick={() => setUser({ ...user, editingEmail: true })}>
-            Изменить
-          </MyButton>
-        </>
-      )}
-    </div>
-  </div>
-</div>
-
-<div className={styles.section}>
-  <div>
-    <strong>Мобильный телефон:</strong>
-    <div className={styles.inputContainer}>
-      {user.editingPhoneNumber ? (
-        <>
-          <input
-            type="text"
-            value={`+7${user.phoneNumber}`}
-            onChange={(e) => handlePhoneNumberChange(e.target.value)}
-            className={styles.input}
-            style={{ borderColor: user.phoneNumber && !validatePhoneNumber(user.phoneNumber) ? "red" : "" }}
-            placeholder="Введите номер телефона"/>
-            <MyButton onClick={handlePhoneNumberSave}>
-              Сохранить
-            </MyButton>
-        </>
-      ) : (
-        <>
-          <span>+7{user.phoneNumber}</span>
-            <MyButton onClick={() => setUser({ ...user, editingPhoneNumber: true })}>
-              Изменить
-            </MyButton>
-        </>
-      )}
-    </div>
-  </div>
-</div>
-
-    <div className={styles.section}>
-      <div>
-        <strong>Размер ноги:</strong>
-            <div className={styles.inputContainer}>
-          {user.editingShoeSize ? (
-            <>
-              <input
-                type="number"
-                value={user.shoeSize}
-                onChange={(e) => setUser({ ...user, shoeSize: e.target.value })}
-                className={styles.input}
-              />
-                <MyButton
-                  onClick={() => setUser((prevUser) => {
-                    const updatedUser = { ...prevUser, editingShoeSize: false };
-                    saveUserToLocalStorage(updatedUser);
-                    return updatedUser;
-                  })}>
-                  Сохранить
-                </MyButton>
-            </>
-          ) : (
-            <>
-              <span>{user.shoeSize}</span>  
-                <MyButton onClick={() => setUser({ ...user, editingShoeSize: true })}>
-                  Изменить
-                </MyButton>
-            </>
-          )}
+            </button>
+          
           </div>
+        </>
+      ) : (
+        <div className={styles.editProfileContainer}>
+          <strong>{user.name}</strong>
+          <button
+            className={styles.button}
+            onClick={() => setUser({ ...user, editingName: true })}
+          >
+            Изменить
+          </button>
         </div>
-      </div>
+      )}
     </div>
-  )}
-
-    {selectedMenuItem === "Адрес" && (<Address />)}
-    {selectedMenuItem === "Способ оплаты" && (<Payment />)}
   </div>
 </div>
-      <MyModal visible={modalVisible} setVisible={setModalVisible} registration={false} style={modalstyle}/>
+
+
+
+              <div className={styles.section}>
+                <div>
+                  <p>Дата рождения</p>
+                  <div className={styles.inputContainer}>
+                    {user.editingBirthDate ? (
+                      <>
+                        <input
+                          type="date"
+                          value={user.birthDate}
+                          onChange={(e) => handleBirthDateChange(e.target.value)}
+                          className={styles.input}
+                        />
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={handleBirthDateSave}
+                          >
+                            Сохранить
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <strong>{user.birthDate}</strong>
+                        <div className={styles.editProfileContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={() => setUser({ ...user, editingBirthDate: true })}
+                          >
+                            Изменить
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div>
+                  <p>Email</p>
+                  <div className={styles.inputContainer}>
+                    {user.editingEmail ? (
+                      <>
+                        <input
+                          type="email"
+                          value={user.email}
+                          onChange={(e) => setUser({ ...user, email: e.target.value })}
+                          className={styles.input}
+                          style={{ borderColor: user.email && !validateEmail(user.email) ? "red" : "" }}
+                        />
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={() => {
+                              if (validateEmail(user.email)) {
+                                setUser((prevUser) => {
+                                  const updatedUser = { ...prevUser, editingEmail: false };
+                                  saveUserToLocalStorage(updatedUser);
+                                  return updatedUser;
+                                });
+                              }
+                            }}
+                          >
+                            Сохранить
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                      <strong>{user.email}</strong>
+                        <div className={styles.editProfileContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={() => setUser({ ...user, editingEmail: true })}
+                          >
+                            Изменить
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div>
+                  <p>Мобильный телефон</p>
+                  <div className={styles.inputContainer}>
+                    {user.editingPhoneNumber ? (
+                      <>
+                        <input
+                          type="text"
+                          value={`+7${user.phoneNumber}`}
+                          onChange={(e) => handlePhoneNumberChange(e.target.value)}
+                          className={styles.input}
+                          style={{ borderColor: user.phoneNumber && !validatePhoneNumber(user.phoneNumber) ? "red" : "" }}
+                          placeholder="Введите номер телефона"
+                        />
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={handlePhoneNumberSave}
+                          >
+                            Сохранить
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <strong>+7{user.phoneNumber}</strong>
+                        <div className={styles.editProfileContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={() => setUser({ ...user, editingPhoneNumber: true })}
+                          >
+                            Изменить
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <div>
+                  <p>Размер ноги</p>
+                      <div className={styles.inputContainer}>
+                    {user.editingShoeSize ? (
+                      <>
+                        <input
+                          type="number"
+                          value={user.shoeSize}
+                          onChange={(e) => setUser({ ...user, shoeSize: e.target.value })}
+                          className={styles.input}
+                        />
+                        <div className={styles.buttonContainer}>
+                          <button
+                            className={styles.button}
+                            onClick={() => setUser((prevUser) => {
+                              const updatedUser = { ...prevUser, editingShoeSize: false };
+                              saveUserToLocalStorage(updatedUser);
+                              return updatedUser;
+                            })}
+                          >
+                            Сохранить
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <strong>{user.shoeSize}</strong>
+                        <div className={styles.editProfileContainer}>
+                        
+                          <button
+                            className={styles.button}
+                            onClick={() => setUser({ ...user, editingShoeSize: true })}
+                            
+                          >
+                            Изменить
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          )}
+
+{selectedMenuItem === "Адрес доставки" && (
+            <Address />
+          )}
+          {selectedMenuItem === "Способ оплаты" && (
+            <Payment />
+          )}
+
+        </div>
+       
+      </div>
       <Footer />
+      
+
     </div>
   );
 }

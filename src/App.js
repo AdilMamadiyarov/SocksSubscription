@@ -25,7 +25,7 @@ function App() {
           <Route path="/MainPage" element={<MainPage />} />
           <Route path="/SubscriptionInfo" element={<SubscriptionInfo />} />
           <Route path="/Collection" element={<CollectionPage />} />
-
+          
           {IsAuth ? (
             <Route path="/ProfilePage" element={<ProfilePage />} />
           ) : (

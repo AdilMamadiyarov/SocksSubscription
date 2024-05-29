@@ -1,22 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import MyHeader from "../../components/MyHeader/MyHeader";
 import classes from "./SubscriptionInfo.module.css";
+import cl from "./SubModal.module.css"
 import { useNavigate } from "react-router-dom";
+import SubModal from "./SubModal";
 
 function SubscriptionInfo() {
     const navigate = useNavigate();
-
+    const [visible, setVisible] = useState(false);
     const subinfo = "Обновите свой гардероб каждый месяц с нашей подпиской на носки! Получайте качественные носки прямо к вашей двери, не выходя из дома. Удобно, стильно, без лишних хлопот. Подпишитесь сегодня и наслаждайтесь комфортом каждый день!";
     const delinfo = "Доставка в любой город Казахстана занимает от 3 до 5 дней в зависимости от региона! Вы можете отслеживать посылку по номеру трека!";
     const subtext = "Подпишитесь на нашу ежемесячную доставку и получайте свежие носки прямо к двери. Комфорт без лишних забот!";
 
     function Payment(subscription) {
         console.log(subscription);
-        navigate('/Payment', { state: { subscription } });
+        setVisible(true);
+        // navigate('/Payment', { state: { subscription } });
+    }
+
+    const rootClasses = [cl.myModal];
+    if (visible) {
+        rootClasses.push(cl.active);
     }
 
     return (
         <div>
+            <SubModal visible={visible} setVisible={setVisible}/>
             <MyHeader />
             <div className={classes.container}>
                 <div className={classes.info}>

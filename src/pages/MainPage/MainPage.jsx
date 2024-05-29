@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MyHeader from "../../components/MyHeader/MyHeader";
 import image1 from '../../images/image1.jpg';
 import image2 from '../../images/image2.jpg';
@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const data = [
-    { text: "Текст на первой картинке", img: image5 },
-    { text: "Текст на второй картинке", img: image6 },
-    { text: "Текст на третьей картинке", img: image7 },
-    { text: "Текст на четвертой картинке", img: image8 },
+    { text: "Стиль", img: image5 },
+    { text: "Качество", img: image6 },
+    { text: "Комфорт", img: image7 },
+    { text: "Размер", img: image8 },
   ];
-  
+  useEffect(() =>{
+    // localStorage.clear();
+  },[])
   const navigate = useNavigate()
   const SliderData = [
     { 
@@ -42,17 +44,17 @@ function MainPage() {
   return (
     <div>
       <MyHeader />
-      <MySlider slides={1} SliderData={SliderData}/>
-      <h1 className="socks-title">Виды носков</h1>
+      <MySlider slides={1} SliderData={SliderData} />
       <div className={classes.gallery}>
         {data.map((item, index) => (
-          <div key={index} className={classes["image-wrapper"]}> 
+          <div key={index} className={classes["image-wrapper"]}>
             <img src={item.img} alt={`Изображение ${index + 1}`} />
-            <div className={classes["image-text"]}>{item.text}</div> 
+            <div className={classes["image-overlay"]}></div> {/* Добавили затемняющий элемент */}
+            <div className={classes["image-text"]}>{item.text}</div>
           </div>
         ))}
       </div>
-    <Footer/>
+      <Footer />
     </div>
   );
 }

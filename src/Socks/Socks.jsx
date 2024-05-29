@@ -24,7 +24,7 @@ export const SocksData = [
 
 export const LightSocks = [
     { 
-        text: "Получено 26.05.2024", 
+        text: "Получено 27.05.2024", 
         img: image5, 
     },
     { 
@@ -34,7 +34,7 @@ export const LightSocks = [
 ];
 export const DarkSocks = [
     { 
-        text: "Получено 26.05.2024", 
+        text: "Получено 27.05.2024", 
         img: image5, 
     },
     { 

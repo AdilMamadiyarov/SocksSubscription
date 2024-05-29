@@ -1,0 +1,92 @@
+.myModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    background: rgba(0,0,0, 0.5);
+    z-index: 10;
+    color: black;
+}
+.myModal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myModalContent {
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    min-width: 250px;
+    width: 400px;
+    height: 500px;
+    position: relative;
+}
+
+.ChangeText {
+    position: absolute;
+    bottom: 20px; 
+    left: 0;
+    right: 0;
+    text-align: center; 
+    font-size: 18px; 
+}
+
+.ChangeText button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: blue;
+    font-size: 18px;
+}
+.GoToPaymentText{
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center; 
+    font-size: 18px; 
+}
+.GoToPaymentText button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: blue;
+    font-size: 18px;
+}
+
+.savedCards {
+    margin-top: 30px;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .cardItem {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .cardItem p {
+    margin: 5px 0;
+    color: #495057;
+    font-size: 20px;
+  }
+  
+  .cardItem strong {
+    color: #343a40;
+  }
+
+
+.address{
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 20px;
+}
+
+.errortext{
+    font-size: 20px;
+}

@@ -3,60 +3,72 @@ import axios from 'axios';
 import styles from './address.module.css';
 
 function Address() {
-  const [address, setAddress] = useState(() => {
-    const storedAddress = localStorage.getItem('address');
-    return storedAddress ? JSON.parse(storedAddress) : {
-      house: '',
-      apartment: '',
-      street: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: ''
-    };
+  const [addresses, setAddresses] = useState(() => {
+    const storedAddresses = localStorage.getItem('addresses');
+    return storedAddresses ? JSON.parse(storedAddresses) : [];
   });
 
-  const [initialAddress, setInitialAddress] = useState(address);
+  const [defaultAddressIndex, setDefaultAddressIndex] = useState(() => {
+    const storedDefaultIndex = localStorage.getItem('defaultAddressIndex');
+    return storedDefaultIndex ? JSON.parse(storedDefaultIndex) : -1;
+  });
+
+  const [currentAddress, setCurrentAddress] = useState({
+    house: '',
+    apartment: '',
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: ''
+  });
+
+
+  const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
   const [isValidating, setIsValidating] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(() => {
-    const storedIsSubmitted = localStorage.getItem('isSubmitted');
-    return storedIsSubmitted ? JSON.parse(storedIsSubmitted) : false;
-  });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(addresses.length === 0);
+  const [isAddButtonVisible, setIsAddButtonVisible] = useState(addresses.length > 0);
 
   useEffect(() => {
-    localStorage.setItem('address', JSON.stringify(address));
-  }, [address]);
+    localStorage.setItem('addresses', JSON.stringify(addresses));
+  }, [addresses]);
 
   useEffect(() => {
-    localStorage.setItem('isSubmitted', JSON.stringify(isSubmitted));
-  }, [isSubmitted]);
+    localStorage.setItem('defaultAddressIndex', JSON.stringify(defaultAddressIndex));
+  }, [defaultAddressIndex]);
+
+
+  const handleSetDefault = (index) => {
+    setDefaultAddressIndex(index);
+    const address = addresses[index];
+    localStorage.setItem("mainaddress", JSON.stringify(address));
+  };
 
   const validate = async () => {
     const errors = {};
 
-    if (!address.house) {
+    if (!currentAddress.house) {
       errors.house = 'Номер дома обязателен';
     }
-    if (!address.apartment) {
+    if (!currentAddress.apartment) {
       errors.apartment = 'Номер квартиры обязателен';
     }
-    if (!address.street) {
+    if (!currentAddress.street) {
       errors.street = 'Улица обязательна';
     }
-    if (!address.city) {
+    if (!currentAddress.city) {
       errors.city = 'Город обязателен';
     }
-    if (!address.state) {
+    if (!currentAddress.state) {
       errors.state = 'Штат/Область обязательны';
     }
-    if (!address.zip) {
+    if (!currentAddress.zip) {
       errors.zip = 'Почтовый индекс обязателен';
-    } else if (!/^\d{6}$/.test(address.zip)) { // Для почтового индекса Казахстана
+    } else if (!/^\d{6}$/.test(currentAddress.zip)) { 
       errors.zip = 'Неверный формат почтового индекса';
     }
-    if (!address.country) {
+    if (!currentAddress.country) {
       errors.country = 'Страна обязательна';
     }
 
@@ -75,11 +87,11 @@ function Address() {
     try {
       const response = await axios.get('https://nominatim.openstreetmap.org/search', {
         params: {
-          street: address.street,
-          city: address.city,
-          state: address.state,
-          postalcode: address.zip,
-          country: address.country,
+          street: currentAddress.street,
+          city: currentAddress.city,
+          state: currentAddress.state,
+          postalcode: currentAddress.zip,
+          country: currentAddress.country,
           format: 'json',
           addressdetails: 1,
         }
@@ -96,9 +108,9 @@ function Address() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAddress({
-      ...address,
-      [name]: value
+    setCurrentAddress({
+      ...currentAddress,
+      [name]: value,
     });
   };
 
@@ -109,55 +121,46 @@ function Address() {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      setIsSubmitted(true);
-      setIsEditing(false);
-      setInitialAddress(address); // Обновляем начальное состояние после сохранения
-      alert(`Address submitted: ${JSON.stringify(address, null, 2)}`);
+      if (editingIndex !== null) {
+        const updatedAddresses = [...addresses];
+        updatedAddresses[editingIndex] = currentAddress;
+        setAddresses(updatedAddresses);
+      } else {
+        setAddresses([...addresses, currentAddress]);
+      }
+      setCurrentAddress({
+        house: '',
+        apartment: '',
+        street: '',
+        city: '',
+        state: '',
+        zip: '',
+        country: ''
+      });
+      setEditingIndex(null);
+      setIsFormVisible(false);
+      setIsAddButtonVisible(true); 
+      alert(`Address submitted: ${JSON.stringify(currentAddress, null, 2)}`);
     }
   };
 
-  const handleReset = () => {
-    setAddress({
-      house: '',
-      apartment: '',
-      street: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: ''
-    });
-    setErrors({});
-    setIsSubmitted(false);
-    setIsEditing(false);
-    localStorage.setItem('isSubmitted', JSON.stringify(false));
+  const handleEdit = (index) => {
+    setCurrentAddress(addresses[index]);
+    setEditingIndex(index);
+    setIsFormVisible(true);
   };
-
-  const fillAddressFromLocation = async (latitude, longitude) => {
-    try {
-      const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
-        params: {
-          lat: latitude,
-          lon: longitude,
-          format: 'json',
-          addressdetails: 1,
-        }
-      });
-
-      const data = response.data.address;
-
-      setAddress({
-        house: data.house_number || '',
-        apartment: '', // Оставляем пустым, так как Nominatim не возвращает информацию о квартире
-        street: data.road || '',
-        city: data.city || data.town || data.village || '',
-        state: data.state || '',
-        zip: data.postcode || '',
-        country: data.country || ''
-      });
-    } catch (error) {
-      console.error('Error fetching address from location:', error);
+  
+  const handleDelete = (index) => {
+    const updatedAddresses = addresses.filter((_, i) => i !== index);
+    setAddresses(updatedAddresses);
+    if (index === defaultAddressIndex) {
+      setDefaultAddressIndex(-1);
+    } else if (index < defaultAddressIndex) {
+      setDefaultAddressIndex(defaultAddressIndex - 1);
     }
+    setIsAddButtonVisible(updatedAddresses.length > 0); 
   };
+  
 
   const handleGetLocation = () => {
     if (navigator.geolocation) {
@@ -176,119 +179,213 @@ function Address() {
     }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const fillAddressFromLocation = async (latitude, longitude) => {
+    try {
+      const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+        params: {
+          lat: latitude,
+          lon: longitude,
+          format: 'json',
+          addressdetails: 1,
+        }
+      });
+
+      const data = response.data.address;
+
+      setCurrentAddress({
+        house: data.house_number || '',
+        apartment: '',
+        street: data.road || '',
+        city: data.city || data.town || data.village || '',
+        state: data.state || '',
+        zip: data.postcode || '',
+        country: data.country || ''
+      });
+    } catch (error) {
+      console.error('Error fetching address from location:', error);
+    }
+  };
+
+  const handleReset = () => {
+    setCurrentAddress({
+      house: '',
+      apartment: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: ''
+    });
+    setErrors({});
+    setEditingIndex(null);
   };
 
   const handleCancelEdit = () => {
-    setAddress(initialAddress);
-    setIsEditing(false);
+    setCurrentAddress({
+      house: '',
+      apartment: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: ''
+    });
+    setEditingIndex(null);
+    setIsFormVisible(false);
   };
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
-          <label>Номер дома:</label>
-          <input
-            type="text"
-            name="house"
-            value={address.house}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.house && <span className={styles.error}>{errors.house}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Номер квартиры:</label>
-          <input
-            type="text"
-            name="apartment"
-            value={address.apartment}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.apartment && <span className={styles.error}>{errors.apartment}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Улица:</label>
-          <input
-            type="text"
-            name="street"
-            value={address.street}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.street && <span className={styles.error}>{errors.street}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Город:</label>
-          <input
-            type="text"
-            name="city"
-            value={address.city}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.city && <span className={styles.error}>{errors.city}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Штат/Область:</label>
-          <input
-            type="text"
-            name="state"
-            value={address.state}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.state && <span className={styles.error}>{errors.state}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Почтовый индекс:</label>
-          <input
-            type="text"
-            name="zip"
-            value={address.zip}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.zip && <span className={styles.error}>{errors.zip}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Страна:</label>
-          <input
-            type="text"
-            name="country"
-            value={address.country}
-            onChange={handleChange}
-            required
-            disabled={isSubmitted && !isEditing}
-          />
-          {errors.country && <span className={styles.error}>{errors.country}</span>}
-        </div>
-        {errors.general && <div className={styles.generalError}>{errors.general}</div>}
+      {isAddButtonVisible && !isFormVisible && (
+        <button className={styles.addButton} onClick={() => setIsFormVisible(true)}>
+          Добавить адрес
+        </button>
+      )}
+      {(isFormVisible || addresses.length === 0) && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Номер дома:</label>
+            <input
+              type="text"
+              name="house"
+              value={currentAddress.house}
+              onChange={handleChange}
+              required
+            />
+            {errors.house && <span className={styles.error}>{errors.house}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Номер квартиры:</label>
+            <input
+              type="text"
+              name="apartment"
+              value={currentAddress.apartment}
+              onChange={handleChange}
+              required
+            />
+            {errors.apartment && <span className={styles.error}>{errors.apartment}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Улица:</label>
+            <input
+              type="text"
+              name="street"
+              value={currentAddress.street}
+              onChange={handleChange}
+              required
+            />
+            {errors.street && <span className={styles.error}>{errors.street}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Город:</label>
+            <input
+              type="text"
+              name="city"
+              value={currentAddress.city}
+              onChange={handleChange}
+              required
+            />
+            {errors.city && <span className={styles.error}>{errors.city}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Штат/Область:</label>
+            <input
+              type="text"
+              name="state"
+              value={currentAddress.state}
+              onChange={handleChange}
+              required
+            />
+            {errors.state && <span className={styles.error}>{errors.state}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Почтовый индекс:</label>
+            <input
+              type="text"
+              name="zip"
+              value={currentAddress.zip}
+              onChange={handleChange}
+              required
+            />
+            {errors.zip && <span className={styles.error}>{errors.zip}</span>}
+          </div>
+          <div className={styles.formGroup}>
+            <label>Страна:</label>
+            <input
+              type="text"
+              name="country"
+              value={currentAddress.country}
+              onChange={handleChange}
+              required
+            />
+            {errors.country && <span className={styles.error}>{errors.country}</span>}
+          </div>
+          {errors.general && <div className={styles.generalError}>{errors.general}</div>}
+          
+          <div className={styles.buttonGroup}>
+            <button
+              type="submit"
+              className={styles.button}
+              disabled={isValidating}
+            >
+              Сохранить
+            </button>
+            <button type="button" className={styles.button} onClick={handleReset}>
+              Сбросить
+            </button>
+            <button type="button" className={styles.button} onClick={handleGetLocation}>
+              Получить местоположение
+            </button>
+            
+              <button type="button" className={styles.button} onClick={handleCancelEdit}>
+                Отменить
+              </button>
+            
+          </div>
+        </form>
+      )}
 
-        <div className={styles.buttonGroup}>
-          {isSubmitted && !isEditing ? (
-            <>
-              <button type="button" className={styles.button} onClick={handleEdit}>Изменить</button>
-            </>
-          ) : (
-            <>
-                            <button type="submit" className={styles.button} disabled={isValidating || JSON.stringify(address) === JSON.stringify(initialAddress)}>Сохранить</button>
-              <button type="button" className={styles.button} onClick={handleReset}>Сбросить</button>
-              <button type="button" className={styles.button} onClick={handleGetLocation}>Получить местоположение</button>
-              <button type="button" className={styles.button} onClick={handleCancelEdit}>Отменить</button>
-            </>
-          )}
+      {!isFormVisible && (
+        <div className={styles.addressList}>
+          {addresses.map((address, index) => (
+            <div
+              key={index}
+              className={`${styles.addressItem} ${defaultAddressIndex === index ? styles.defaultAddress : ''}`}
+            >
+              <div className={styles.addressDetails}>
+                <p>{`${address.house} дом`}, {` ${address.apartment} кв.`}</p>
+                <p> {`${address.street}`}, {` ${address.city}`}</p>
+                <p>{`${address.state}`}, {`${address.zip}`}, {`${address.country}`}</p>
+              </div>
+              <div className={styles.addressActions}>
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => handleEdit(index)}
+                >
+                  Изменить
+                </button>
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={() => handleDelete(index)}
+                >
+                  Удалить
+                </button>
+              </div>
+              <div className={styles.defaultButtonContainer}>
+                <button
+                  type="button"
+                  className={styles.buttonStar}
+                  onClick={() => handleSetDefault(index)}
+                >
+                  {defaultAddressIndex === index ? '★' : '☆'}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </form>
+      )}
     </div>
   );
 }

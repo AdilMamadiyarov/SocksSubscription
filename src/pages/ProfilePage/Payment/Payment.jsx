@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './payment.module.css';
+import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 function Payment() {
   const [cardNumber, setCardNumber] = useState('');
@@ -11,6 +12,7 @@ function Payment() {
     const storedCards = localStorage.getItem('savedCards');
     return storedCards ? JSON.parse(storedCards) : [];
   });
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('savedCards', JSON.stringify(savedCards));
@@ -23,6 +25,7 @@ function Payment() {
       const newCard = { cardNumber, cardName, expiryDate, cvv };
       setSavedCards([...savedCards, newCard]);
       resetForm();
+      setShowForm(false);
       alert('Данные карты успешно сохранены!');
     } else {
       setErrors(validationErrors);
@@ -65,68 +68,133 @@ function Payment() {
     setSavedCards(updatedCards);
   };
 
+  const handleCancel = () => {
+    setShowForm(false);
+    resetForm();
+  };
+
+  const handleEditCard = (index) => {
+    const card = savedCards[index];
+    setCardNumber(card.cardNumber);
+    setCardName(card.cardName);
+    setExpiryDate(card.expiryDate);
+    setCvv(card.cvv);
+    setShowForm(true);
+    setShowOptions(null);
+    handleDeleteCard(index);
+  };
+
+  const [showOptions, setShowOptions] = useState(null);
+
   return (
     <div className={styles.container}>
-      <h2>Введите данные вашей карты</h2>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGroup}>
-          <label>Номер карты:</label>
-          <input
-            type="text"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-            required
-            placeholder="XXXX XXXX XXXX XXXX"
-          />
-          {errors.cardNumber && <span className={styles.error}>{errors.cardNumber}</span>}
+      {showForm ? (
+        <div className={styles.newCardFormContainer}>
+          <h2>Введите данные вашей карты</h2>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <input
+                type="text"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                required
+                placeholder="1234 1234 1234 1234"
+              />
+              {errors.cardNumber && <span className={styles.error}>{errors.cardNumber}</span>}
+            </div>
+            <div className={styles.formGroup}>
+              <input
+                type="text"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
+                required
+                placeholder="Имя на карте"
+              />
+              {errors.cardName && <span className={styles.error}>{errors.cardName}</span>}
+            </div>
+            <div className={styles.MMYYCVV}>
+              <div className={styles.formGroup}>
+                <input
+                  type="text"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                  required
+                  placeholder="MM/YY"
+                />
+                {errors.expiryDate && <span className={styles.error}>{errors.expiryDate}</span>}
+              </div>
+              <div className={styles.formGroup}>
+                <input
+                  type="text"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  required
+                  placeholder="CVV"
+                />
+                {errors.cvv && <span className={styles.error}>{errors.cvv}</span>}
+              </div>
+            </div>
+            <div className={styles.buttonGroup}>
+              <button type="submit" className={styles.submitButton}>Отправить</button>
+              <button type="button" onClick={handleCancel} className={styles.submitButton}>Отмена</button>
+            </div>
+          </form>
         </div>
-        <div className={styles.formGroup}>
-          <label>Имя на карте:</label>
-          <input
-            type="text"
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value)}
-            required
-            placeholder="ИМЯ ФАМИЛИЯ"
-          />
-          {errors.cardName && <span className={styles.error}>{errors.cardName}</span>}
+      ) : (
+        <div className={styles.savedCardsContainer}>
+          {savedCards.length > 0 && <h2>Сохраненные карты</h2>}
+          {savedCards.length > 0 ? (
+            <ul className={styles.savedCards}>
+              {savedCards.map((card, index) => (
+                <li key={index} className={styles.cardItem}>
+                  <div className={styles.cardHeader}>
+                    <button
+                      className={styles.optionsButton}
+                      onClick={() => setShowOptions(showOptions === index ? null : index)}
+                    >
+                      &#x22EE;
+                    </button>
+                  </div>
+                  <div className={styles.cardInfo}>
+                    <p className={styles.cardNumber}>
+                      {card.cardNumber.replace(/\d{12}(?=\d{4})/, '**** **** **** ')}
+                    </p>
+                    <div className={styles.cardDetails}>
+                      <p className={styles.expiryDate}>{card.expiryDate}</p>
+                      <p className={styles.cvv}>***</p>
+                    </div>
+                    <p className={styles.cardName}>{card.cardName}</p>
+                  </div>
+                  {showOptions === index && (
+                    <div className={styles.editDeleteButtons}>
+                      <button
+                        onClick={() => handleEditCard(index)}
+                        className={`${styles.editButton} ${styles.button}`}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCard(index)}
+                        className={`${styles.deleteButton} ${styles.button}`}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>У вас нет сохраненных карт</p>
+          )}
         </div>
-        <div className={styles.formGroup}>
-          <label>Срок действия (MM/YY):</label>
-          <input
-            type="text"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
-            required
-            placeholder="MM/YY"
-          />
-          {errors.expiryDate && <span className={styles.error}>{errors.expiryDate}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>CVV:</label>
-          <input
-            type="text"
-            value={cvv}
-            onChange={(e) => setCvv(e.target.value)}
-            required
-            placeholder="123"
-          />
-          {errors.cvv && <span className={styles.error}>{errors.cvv}</span>}
-        </div>
-        <button type="submit" className={styles.submitButton}>Отправить</button>
-      </form>
-      <h2>Сохраненные карты</h2>
-      <ul className={styles.savedCards}>
-        {savedCards.map((card, index) => (
-          <li key={index} className={styles.cardItem}>
-            <p><strong>Номер карты:</strong> {card.cardNumber.replace(/\d{12}(?=\d{4})/, '**** **** **** ')}</p>
-            <p><strong>Имя на карте:</strong> {card.cardName}</p>
-            <p><strong>Срок действия:</strong> {card.expiryDate}</p>
-            <p><strong>CVV:</strong> {card.cvv.replace(/\d{2}/, '**')}</p>
-            <button onClick={() => handleDeleteCard(index)} className={styles.deleteButton}>Удалить</button>
-          </li>
-        ))}
-      </ul>
+      )}
+
+      {!showForm && (
+        <button onClick={() => setShowForm(true)} className={styles.addButton}>
+          Добавить карту
+        </button>
+      )}
     </div>
   );
 }
