@@ -46,7 +46,7 @@ const SubModal = ({ visible, setVisible }) => {
                         <ul className={cl.savedCards}>
                             {savedCards.map((card, index) => (
                                 <li key={index} className={cl.cardItem}>
-                                    <p><strong>Номер карты:</strong> {card.cardNumber.replace(/\d{12}(?=\d{4})/, '**** **** **** ')}</p>
+                                    <p><strong>Номер карты:</strong> {card.cardNumber.replace(/\s/g, '').replace(/\d{12}(?=\d{4})/, '**** **** **** ')}</p>
                                     <p><strong>Имя на карте:</strong> {card.cardName}</p>
                                     <p><strong>Срок действия:</strong> {card.expiryDate}</p>
                                     <p><strong>CVV:</strong> {card.cvv.replace(/\d{2}/, '**')}</p>

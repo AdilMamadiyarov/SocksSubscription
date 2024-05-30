@@ -97,10 +97,10 @@
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);/* Центрируем контейнер */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрируем элементы по горизонтали */
+  align-items: center;
 }
 
 h2 {
@@ -113,8 +113,8 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center; /* Центрируем элементы внутри формы */
-  width: 100%; /* Ширина на 100% контейнера */
+  align-items: center; 
+  width: 100%; 
 }
 
 label {
@@ -178,22 +178,22 @@ input:disabled {
 
 .buttonGroup {
   display: flex;
-  justify-content: center; /* Центрируем кнопки по горизонтали */
+  justify-content: center; 
   gap: 21px;
-  margin-top: 20px; /* Добавляем отступ сверху */
+  margin-top: 20px; 
 }
 
 .MMYYCVV {
   display: flex;
   gap: 10px; 
   width: 300px;
-  align-items: center; /* Добавляем отступ между полями */
+  align-items: center; 
 }
 
 .MMYYCVV .formGroup {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрируем элементы по горизонтали */
+  align-items: center;
   width: 100%;
 }
 
@@ -203,16 +203,17 @@ input:disabled {
 
 .MMYYCVV .formGroup input {
   width: 100%;
-  max-width: 300px; /* Ограничиваем максимальную ширину инпута */
-  text-align: center; /* Выравниваем текст по центру */
+  max-width: 300px; 
+  text-align: center; 
 }
 
 .addButton {
-  background: none;
+  background: (50,50,50,5);
+  border-radius: 5px;
   border: none;
   color: #353535;
   cursor: pointer;
-  padding: 0;
+  padding: 5;
   font-size: 16px;
   font-weight: 700;
   display: inline;

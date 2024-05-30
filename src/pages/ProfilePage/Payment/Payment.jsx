@@ -42,25 +42,33 @@ function Payment() {
 
   const validateCardData = () => {
     const errors = {};
-
-    if (cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+  
+    if (cardNumber.length !== 19 || !/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(cardNumber)) {
       errors.cardNumber = 'Номер карты должен содержать ровно 16 цифр';
     }
-
+  
     if (!cardName.trim()) {
       errors.cardName = 'Введите имя, как оно указано на карте';
     }
-
-    if (!expiryDate.trim() || !/^\d{2}\/\d{2}$/.test(expiryDate)) {
+  
+    const [month, year] = expiryDate.split('/').map(num => parseInt(num, 10));
+    if (!expiryDate.trim() || !/^\d{2}\/\d{2}$/.test(expiryDate) || month < 1 || month > 12) {
       errors.expiryDate = 'Введите срок действия карты в формате MM/YY';
+    } else {
+      const currentYear = new Date().getFullYear() % 100; 
+      const currentMonth = new Date().getMonth() + 1; 
+      if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        errors.expiryDate = 'Срок действия карты истек';
+      }
     }
-
+  
     if (!cvv.trim() || !/^\d{3}$/.test(cvv)) {
       errors.cvv = 'CVV должен содержать ровно 3 цифры';
     }
-
+  
     return errors;
   };
+  
 
   const handleDeleteCard = (index) => {
     const updatedCards = [...savedCards];
@@ -86,6 +94,36 @@ function Payment() {
 
   const [showOptions, setShowOptions] = useState(null);
 
+  const formatCardNumber = (number) => {
+    return number.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim();
+  };
+
+  const handleCardNumberChange = (e) => {
+    const formattedNumber = formatCardNumber(e.target.value);
+    setCardNumber(formattedNumber);
+  };
+
+  const formatExpiryDate = (date) => {
+    if (date.length > 5) return date;
+    const cleaned = date.replace(/\D/g, ''); 
+    let formatted = cleaned;
+  
+    if (cleaned.length >= 2) {
+      const month = parseInt(cleaned.slice(0, 2), 10);
+      if (month < 1 || month > 12) {
+        return date; 
+      }
+      formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4);
+    }
+  
+    return formatted;
+  };
+  
+  const handleExpiryDateChange = (e) => {
+    const formattedDate = formatExpiryDate(e.target.value);
+    setExpiryDate(formattedDate);
+  };
+
   return (
     <div className={styles.container}>
       {showForm ? (
@@ -96,7 +134,8 @@ function Payment() {
               <input
                 type="text"
                 value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
+                maxLength={19}
+                onChange={handleCardNumberChange}
                 required
                 placeholder="1234 1234 1234 1234"
               />
@@ -114,18 +153,20 @@ function Payment() {
             </div>
             <div className={styles.MMYYCVV}>
               <div className={styles.formGroup}>
-                <input
-                  type="text"
-                  value={expiryDate}
-                  onChange={(e) => setExpiryDate(e.target.value)}
-                  required
-                  placeholder="MM/YY"
-                />
+              <input
+                type="text"
+                maxLength={5}
+                value={expiryDate}
+                onChange={handleExpiryDateChange}
+                required
+                placeholder="MM/YY"
+              />
                 {errors.expiryDate && <span className={styles.error}>{errors.expiryDate}</span>}
               </div>
               <div className={styles.formGroup}>
                 <input
                   type="text"
+                  maxLength={3}
                   value={cvv}
                   onChange={(e) => setCvv(e.target.value)}
                   required
@@ -156,9 +197,9 @@ function Payment() {
                     </button>
                   </div>
                   <div className={styles.cardInfo}>
-                    <p className={styles.cardNumber}>
-                      {card.cardNumber.replace(/\d{12}(?=\d{4})/, '**** **** **** ')}
-                    </p>
+                  <p className={styles.cardNumber}>
+                    {card.cardNumber.replace(/\s/g, '').replace(/\d{12}(?=\d{4})/, '**** **** **** ')}
+                  </p>
                     <div className={styles.cardDetails}>
                       <p className={styles.expiryDate}>{card.expiryDate}</p>
                       <p className={styles.cvv}>***</p>

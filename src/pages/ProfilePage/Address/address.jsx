@@ -23,7 +23,6 @@ function Address() {
     country: ''
   });
 
-
   const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
   const [isValidating, setIsValidating] = useState(false);
@@ -32,17 +31,24 @@ function Address() {
 
   useEffect(() => {
     localStorage.setItem('addresses', JSON.stringify(addresses));
-  }, [addresses]);
+    if (defaultAddressIndex >= 0 && defaultAddressIndex < addresses.length) {
+      localStorage.setItem('mainaddress', JSON.stringify(addresses[defaultAddressIndex]));
+    } else {
+      localStorage.removeItem('mainaddress');
+    }
+  }, [addresses, defaultAddressIndex]);
 
   useEffect(() => {
     localStorage.setItem('defaultAddressIndex', JSON.stringify(defaultAddressIndex));
   }, [defaultAddressIndex]);
 
-
   const handleSetDefault = (index) => {
     setDefaultAddressIndex(index);
-    const address = addresses[index];
-    localStorage.setItem("mainaddress", JSON.stringify(address));
+    if (index >= 0 && index < addresses.length) {
+      localStorage.setItem('mainaddress', JSON.stringify(addresses[index]));
+    } else {
+      localStorage.removeItem('mainaddress');
+    }
   };
 
   const validate = async () => {
@@ -121,13 +127,22 @@ function Address() {
       setErrors(validationErrors);
     } else {
       setErrors({});
+      let updatedAddresses;
+      let newIndex;
+  
       if (editingIndex !== null) {
-        const updatedAddresses = [...addresses];
+        updatedAddresses = [...addresses];
         updatedAddresses[editingIndex] = currentAddress;
-        setAddresses(updatedAddresses);
+        newIndex = editingIndex;
       } else {
-        setAddresses([...addresses, currentAddress]);
+        updatedAddresses = [...addresses, currentAddress];
+        newIndex = updatedAddresses.length - 1;  
       }
+  
+      setAddresses(updatedAddresses);
+      setDefaultAddressIndex(newIndex); 
+      localStorage.setItem('mainaddress', JSON.stringify(currentAddress)); 
+  
       setCurrentAddress({
         house: '',
         apartment: '',
@@ -143,6 +158,7 @@ function Address() {
       alert(`Address submitted: ${JSON.stringify(currentAddress, null, 2)}`);
     }
   };
+  
 
   const handleEdit = (index) => {
     setCurrentAddress(addresses[index]);
@@ -155,12 +171,12 @@ function Address() {
     setAddresses(updatedAddresses);
     if (index === defaultAddressIndex) {
       setDefaultAddressIndex(-1);
+      localStorage.removeItem("mainaddress");
     } else if (index < defaultAddressIndex) {
       setDefaultAddressIndex(defaultAddressIndex - 1);
     }
     setIsAddButtonVisible(updatedAddresses.length > 0); 
   };
-  
 
   const handleGetLocation = () => {
     if (navigator.geolocation) {
@@ -233,7 +249,6 @@ function Address() {
     setEditingIndex(null);
     setIsFormVisible(false);
   };
-
   return (
     <div className={styles.container}>
       {isAddButtonVisible && !isFormVisible && (
