@@ -9,6 +9,7 @@ import Payment from "../../pages/ProfilePage/Payment/Payment";
 import SideBar from "./SideBar/SideBar";
 import MyModal from "../../components/MyModal/RegistrationModal";
 import modalstyle from "./Logout/Logout.module.css";
+import FaqPage from "./faqpage/FaqPage"
 
 function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -364,13 +365,15 @@ function ProfilePage() {
             
           )}
 
-{selectedMenuItem === "Адрес доставки" && (
+          {selectedMenuItem === "Адрес доставки" && (
             <Address />
           )}
           {selectedMenuItem === "Способ оплаты" && (
             <Payment />
           )}
-
+          {selectedMenuItem === "Вопросы и ответы" && (
+            <FaqPage />
+          )}
         </div>
        
       </div>

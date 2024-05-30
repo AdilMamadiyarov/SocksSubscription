@@ -1,0 +1,42 @@
+.container{
+    align-items: center;
+    text-align: center;
+}
+.backdiv {
+    text-align: left;
+}
+.backdiv button {
+    font-size: 35px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.sendbutton{
+    width: 350px;
+    background-color: #333;
+    border-radius: 5px;
+    height: 40px;
+    margin: auto; 
+    display: block; 
+    font-size: 20px;
+    color: White;
+    cursor: pointer;
+    margin: 30px
+}
+
+.codecontainer{
+    align-items: center;
+    text-align: center;
+}
+.codecontainer input{
+    background: none;
+    border: none;
+}
+
+.resetcontainer input{
+    margin-top: 10px;
+}
+.resetcontainer{
+    align-items: center;
+    text-align: center;
+}

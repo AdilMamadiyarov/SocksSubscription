@@ -83,10 +83,10 @@
   width: 1000px;
   padding: 15px;
   margin-bottom: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Добавляем тень */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   border-radius: 8px;
   display: flex;
-  flex-direction: column; /* Отображаем информацию в столбец */
+  flex-direction: column;
   position: relative;
 }
 
@@ -100,17 +100,17 @@
 
 .addressActions {
   position: absolute;
-  top: 80px; /* Располагаем кнопки относительно верхнего края контейнера */
-  right: 15px; /* Располагаем кнопки справа */
+  top: 80px; 
+  right: 15px; 
 }
 
 .addressActions .button {
-  margin-bottom: 5px; /* Отступ между кнопками */
+  margin-bottom: 5px; 
 }
 
 .defaultButtonContainer {
-  position: absolute;  /* Абсолютное позиционирование */
-  top: 10px;           /* Располагаем звезды в правом верхнем углу */
+  position: absolute;  
+  top: 10px;           
   right: 10px;
 }
 
@@ -130,14 +130,14 @@
 }
 
 .buttonStar {
-  border: none;       /* Убираем границу кнопки */
-  background: none;   /* Убираем фон кнопки */
-  padding: 0;         /* Убираем внутренние отступы */
-  cursor: pointer;    /* Меняем курсор при наведении на кнопку */
-  font-size: 24px;    /* Увеличиваем размер звёзд */
-  color: rgb(58, 58, 58);        /* Цвет звёзд */
+  border: none;       
+  background: none;  
+  padding: 0;         
+  cursor: pointer;  
+  font-size: 24px;    
+  color: rgb(58, 58, 58);     
 }
 
 .buttonStar:focus {
-  outline: none;      /* Убираем обводку при фокусе */
+  outline: none;     
 }
