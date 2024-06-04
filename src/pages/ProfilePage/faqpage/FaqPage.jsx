@@ -1,34 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import FAQ from '../../../components/FAQ/FAQ';
+import TypeWriter from '../../../components/TypeEffect/TypeWriter';
 
-function faqpage() {
+function FaqPage() {
     const faqData = [
         { 
             question: "Как часто приходят носки?", 
-            answer: "Каждый месяц",
+            answer: "- Каждый месяц",
         },
         { 
             question: "Что если у меня будет другой адрес?", 
-            answer: "Вы можете в изменить свой адрес в любой момент в своем профиле",
+            answer: "- Вы можете изменить свой адрес в любой момент в своем профиле",
         },
         { 
             question: "Мне ничего не пришло, верните деньги", 
-            answer: "нет.",
+            answer: "- нет.",
         },
         { 
             question: "Почему так дешево?", 
-            answer: "потому то",
+            answer: "- потому то",
         },
         { 
             question: "Можно ли самим выбрать стиль носков?", 
-            answer: "рискните",
+            answer: "- рискните",
         },
     ];
-  return (
-    <div>
-        <FAQ data={faqData}/>
-    </div>
-  );
+    
+
+    return (
+        <div>
+            <TypeWriter words={[
+                "Вопрос и ответ",
+                "Найдите ответ на любой вопрос!",
+                "Мы рады вас видеть!",
+            ]} style={{ fontFamily: 'monospace', fontSize: '2em', color: 'black' }}/>
+            
+            <FAQ data={faqData} />
+        </div>
+    );
 }
 
-export default faqpage;
+export default FaqPage;
