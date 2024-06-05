@@ -6,7 +6,7 @@ const TypeWriter = ({ words, ...props }) => {
         <div {...props}>
         <Typewriter
             words={words}
-            loop={5}
+            loop={true}
             cursor
             cursorStyle='_'
             typeSpeed={70}

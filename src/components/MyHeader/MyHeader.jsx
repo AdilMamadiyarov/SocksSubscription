@@ -3,11 +3,14 @@ import classes from './MyHeader.module.css';
 import { CustomLink } from "../CustomLink/CustomLink";
 import logo from '../../images/logo.png';
 import MyModal from "../MyModal/RegistrationModal";
+import modalstyle from "../../pages/ProfilePage/Logout/Logout.module.css";
 import { AuthContext } from "../context";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const MyHeader = ({...props }) => { 
+const MyHeader = ({selectedMenuItem, setSelectedMenuItem, ...props }) => { 
     const {setIsAuth} = useContext(AuthContext);
-
+    const navigate = useNavigate();
+    const location = useLocation();
     useEffect(() => {
       const CheckIsAuth = () => {
         if (localStorage.getItem('auth')) {
@@ -18,13 +21,22 @@ const MyHeader = ({...props }) => {
     }, [setIsAuth]);
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [exitmodalVisible, setExitModalVisible] = useState(false);
     const {IsAuth} = useContext(AuthContext);
 
-    function ModalRegistration(){
-        setModalVisible(true);
-        console.log(modalVisible)
+    function ModalRegistration(reg){
+        if (reg){
+            setModalVisible(true);
+        }
+        else{
+            setExitModalVisible(true);
+        }
+        console.log(modalVisible, exitmodalVisible)
     }
-
+    const handleMenuItemClick = (menuItem) => {
+        setSelectedMenuItem(menuItem);
+    };
+    
     return (
     <header {...props} className={classes.MyHeader}>
         <div className={classes.logo}>
@@ -36,12 +48,25 @@ const MyHeader = ({...props }) => {
             <CustomLink to="/Collection" className={classes.navtext}>Коллекция</CustomLink>
             <CustomLink to="/SubscriptionInfo" className={classes.navtext}>Подписка</CustomLink>
             {IsAuth ? (
-                <CustomLink to="/ProfilePage" className={classes.navtext}>Профиль</CustomLink>
+                <div className={classes.dropdown}>
+                    <CustomLink to="/ProfilePage" className={classes.navtext}>Профиль</CustomLink>
+                    {location.pathname === "/ProfilePage" && (
+                            <div className={classes.dropdownMenu}>
+                                <p onClick={() => handleMenuItemClick("Информация аккаунта")}>Информация аккаунта</p>
+                                <p onClick={() => handleMenuItemClick("Адрес доставки")}>Адрес доставки</p>
+                                <p onClick={() => handleMenuItemClick("Способ оплаты")}>Способ оплаты</p>
+                                <p onClick={() => handleMenuItemClick("Вопросы и ответы")}>Вопросы и ответы</p>
+                                <p onClick={() => navigate('/SubscriptionInfo')}>Подписка</p>
+                                <p onClick={() => ModalRegistration(false)}>Выйти</p>
+                            </div>
+                        )}
+                </div>
             ) : (
-                <CustomLink to="" onClick={ModalRegistration} className={classes.navtext}>Регистрация</CustomLink>
+                <CustomLink to="" onClick={() => ModalRegistration(true)} className={classes.navtext}>Регистрация</CustomLink>
             )}
         </div>
         <MyModal visible={modalVisible} setVisible={setModalVisible} registration={true}/>
+        <MyModal visible={exitmodalVisible} setVisible={setExitModalVisible} registration={false} style={modalstyle}/>
     </header>
     );
 };

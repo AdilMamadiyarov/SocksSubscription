@@ -104,7 +104,7 @@ function ProfilePage() {
   return (
     <div>
       <MyModal visible={modalVisible} setVisible={setModalVisible} registration={false} style={modalstyle}/>
-      <MyHeader />
+      <MyHeader selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>
       <div className={styles.container}>
       <SideBar selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
         <div className={styles.profile}>

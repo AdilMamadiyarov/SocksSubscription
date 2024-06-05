@@ -1,8 +1,9 @@
 import React from "react";
 import styles from './SideBar.module.css';
+import { useNavigate } from "react-router-dom";
 
 const SideBar = ({selectedMenuItem, setSelectedMenuItem, modalVisible, setModalVisible}) => {
-
+  const navigate = useNavigate();
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
   };
@@ -22,7 +23,7 @@ const SideBar = ({selectedMenuItem, setSelectedMenuItem, modalVisible, setModalV
           <li onClick={() => handleMenuItemClick("Адрес доставки")} className={selectedMenuItem === "Адрес доставки" ? styles.active : ""}>Адрес доставки</li>
           <li onClick={() => handleMenuItemClick("Способ оплаты")} className={selectedMenuItem === "Способ оплаты" ? styles.active : ""}>Способ оплаты</li>
           <li onClick={() => handleMenuItemClick("Вопросы и ответы")} className={selectedMenuItem === "Вопросы и ответы" ? styles.active : ""}>Вопросы и ответы</li>
-          <li onClick={() => handleMenuItemClick("Подписка")} className={selectedMenuItem === "Подписка" ? styles.active : ""}>Подписка</li>
+          <li onClick={() => navigate('/SubscriptionInfo')} className={selectedMenuItem === "Подписка" ? styles.active : ""}>Подписка</li>
         <li onClick={ModalRegistration} >Выйти</li>
       </ul>
     </div>
